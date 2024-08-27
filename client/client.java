@@ -5,6 +5,11 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.math.BigInteger;
+import java.security.NoSuchAlgorithmException;
+
 
 public class client {
     /* Password Requirements */
@@ -47,7 +52,7 @@ public class client {
         return status;
     }
 
-    public String run(){
+    private String run(){
         boolean run = true;
         Scanner input = new Scanner(System.in);
         while (run){
@@ -64,6 +69,20 @@ public class client {
         return "Success!";
     }
 
+    /* Hashing algorith for SHA - 256 using MessageDigest and Standard Charsets.UTF_8 */
+    private String hashString(String input){
+    try {
+        MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+        byte hashBytes[] = messageDigest.digest(input.getBytes(StandardCharsets.UTF_8));
+        BigInteger noHash = new BigInteger(1, hashBytes);
+        String hashStr = noHash.toString(16);
+        return hashStr;
+    } catch (NoSuchAlgorithmException e) {
+        e.printStackTrace();
+    }
+    return "Hashed";
+    }
+
 
 
     /* Used to keep track of all passwords used */
@@ -75,6 +94,7 @@ public class client {
 
     public static void main(String[] args) {
         client myClient = new client();
+        System.out.println(myClient.hashString("password"));
         System.out.println(myClient.run());
 }
 }
