@@ -1,4 +1,7 @@
 /* Client side for password manager */
+/*
+ * Needed Libraries and imports 
+ */
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
@@ -12,11 +15,15 @@ import java.security.NoSuchAlgorithmException;
 
 
 public class client {
-    /* Password Requirements */
+    /* Password Requirements
+     * Min & Max Characters used for initialization 
+     * Total Passwords used for counter of passwords
+     * REGEX used to enforce special character password rule
+     * passwordList used to keep track of each password in the list of passwords
+     * dupSet used to detect duplicates in a password list
+     */
     public static final int MIN_CHARACTERS = 8;
     public static final int MAX_CHARACTERS = 64;
-    public String TRIGGER;
-    public String PASSWORD;
     public static int TOTAL_PASSWORDS = 0;
     public static String SPECIALCHARACTER_REGEX = ".*[!@#$%^&*()_+{}\\[\\]:;\"'<>,.?/~`|-].*";
 
@@ -37,7 +44,25 @@ public class client {
         }
     }
 
-    /* Validating Password Using the set requirements. Primary function for password checking */
+    private void updatePassword(int selected){
+        /* User inputs value to change in the list ** REMEMBER USER IS NOT ACCOUNTING FOR ZERO INDEXING ** */
+        if (selected <= 0 || selected > passwordList.size()){
+            System.out.println("Error: Input given either too small or big for list, please try again with a appicable selection.");
+        } else {
+            System.out.println("Good");
+        }
+    }
+
+    /* Validating Password Using the set requirements. Primary function for password checking 
+     * pattern is used to compule the special character regex into a variable to later be compared against the password inputted using the 
+     * matcher class.
+     * if the matcher returns true then it satisfies the special character requirement
+     * the dupSet is mapped to the passwordList earlier in the intialization of the two because of the nature of sets not allowing duplicates by default
+     * if the dupSet size is the same as the password list & the password matches the special character regex
+     * then no duplicates are detected and the current iteration can be added to the password list
+     * The status is filled with the response of conditional loop handling validation and is returned at the end
+    */
+
     private String validatePassWord(String input){
         String status;
         Pattern pattern = Pattern.compile(SPECIALCHARACTER_REGEX);
@@ -47,29 +72,45 @@ public class client {
             status = "Validated";
         } else {
             status = "Error: Duplicate or Non-Special Character";
+            System.out.println(passwordList);
+            System.out.println(dupSET);
         }
-        System.out.println(status);
         return status;
     }
 
-    private String run(){
+    /*
+     * Used to simulate a typical runtime from a user interacting with our program
+     * the variable run is used to stabilize the while loop until the user enters "exit" to break the loop/simulation
+     * right now, the user is prompted to enter a password which is stored in a variable called line
+     * ideally the run program should send this password into our createpassword function which will validate the base requirements for a password (min, max) 
+     * and then also send the result of createpassword into validatepassword to check for duplication, special characters and any other complex checking needed for the password
+     * eventually the user exits the program and we send them a goodbye message
+     */
+
+    private void run(){
         boolean run = true;
         Scanner input = new Scanner(System.in);
         while (run){
             System.out.print("Enter The Password: ");
             String line = input.nextLine();
+            System.out.println(line);
             if ("exit".equalsIgnoreCase(line)) {
-                System.out.println("Goodbye!");
                 break;
             }
             createPassword(line);
         }
         input.close();
-        System.out.println(passwordList);
-        return "Success!";
+        System.out.println("Goodbye!");
     }
 
     /* Hashing algorith for SHA - 256 using MessageDigest and Standard Charsets.UTF_8 */
+    /* Uses the messageDigest class to get the instance of SHA-256. Simply just pulling the hash from a library in java and storing it in MessageDigest 
+     * We then use the messageDigest class to create a array of bytes. We use the class to take the password given in the input and convert the string into an array of bytes
+     * using the StandardCharsets.UTF_8 encoding (recommeneded by NIST)
+     * After we create a biginterger called noHash using the hash created in the hashBytes variable. We used biginterger because it allows us to handle large numbers
+     * After creating the hash we then create the string using .toString() to get only the 16 bytes needed for the hash
+     * returns error in the stack if encountered
+      */
     private String hashString(String input){
     try {
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
@@ -94,7 +135,6 @@ public class client {
 
     public static void main(String[] args) {
         client myClient = new client();
-        System.out.println(myClient.hashString("password"));
-        System.out.println(myClient.run());
+        System.out.println(myClient.createPassword("password123_!"));
 }
 }
