@@ -30,17 +30,18 @@ public class client {
     /* List of passwords for duplication and storage */
     private ArrayList<String> passwordList = new ArrayList<String>();
     private Set<String> dupSET = new HashSet<String>(passwordList);
+    private ArrayList<String> dummyList = new ArrayList<String>();
 
 
 
     /* Used to create the password, only checks for password length then is feed to validatePasswords for further
      * validation
      */
-    public String createPassword(String PASSWORD){
+    public void createPassword(String PASSWORD){
         if (PASSWORD.length() > MIN_CHARACTERS && PASSWORD.length() < MAX_CHARACTERS){
-            return validatePassWord(PASSWORD);
+            validatePassWord(PASSWORD);
         } else {
-            return "Password length is not strong enough";
+            System.out.println("Password length is not strong enough\n");
         }
     }
 
@@ -63,19 +64,26 @@ public class client {
      * The status is filled with the response of conditional loop handling validation and is returned at the end
     */
 
-    private String validatePassWord(String input){
-        String status;
+    private void validatePassWord(String input){
         Pattern pattern = Pattern.compile(SPECIALCHARACTER_REGEX);
         Matcher matcher = pattern.matcher(input);
-        if (matcher.matches() && dupSET.size() == passwordList.size()){
+        dupSET.add(input);
+        dummyList.add(input);
+        if (matcher.matches() && dupSET.size() == dummyList.size()){
             passwordList.add(input);
-            status = "Validated";
+            System.out.println("Validated!\n");
+        } else  if (!matcher.matches()){
+            System.out.println("Error: Non-Special Character\n");
+            //System.out.print("Does it contain a special character: " + matcher.matches() + "\n");
         } else {
-            status = "Error: Duplicate or Non-Special Character";
-            System.out.println(passwordList);
-            System.out.println(dupSET);
+            System.out.println("Error: Duplicate Passwords are not allowed\n");
+            /*
+            System.out.println("dupSET Size: " + dupSET.size());
+            System.out.println("dummyList Size: " + dummyList.size());
+            System.out.println("dupSet Content: " + dupSET);
+            System.out.println("dummyList Content: " + dummyList);
+            */
         }
-        return status;
     }
 
     /*
@@ -93,13 +101,13 @@ public class client {
         while (run){
             System.out.print("Enter The Password: ");
             String line = input.nextLine();
-            System.out.println(line);
             if ("exit".equalsIgnoreCase(line)) {
                 break;
             }
             createPassword(line);
         }
         input.close();
+        System.out.print("Your Password List: " + passwordList + "\n");
         System.out.println("Goodbye!");
     }
 
@@ -135,6 +143,8 @@ public class client {
 
     public static void main(String[] args) {
         client myClient = new client();
-        System.out.println(myClient.createPassword("password123_!"));
-}
+        myClient.run();
+
+        
+    }
 }
