@@ -57,7 +57,10 @@ public class client {
     /* Validating Password Using the set requirements. Primary function for password checking 
      * pattern is used to compule the special character regex into a variable to later be compared against the password inputted using the 
      * matcher class.
-     * if the matcher returns true then it satisfies the special character requirement
+     * Introduced a new list called "dummyList" that gets implemented on instance, same as with the dupSET
+     * We now compare the two upon execution of the conditional statement which better handles duplicates as before it wasn't adding the password into the dupSET only the password list
+     * which got implemented on first execution (dupSET didn't) and made the conditional statement fail
+     * Now, if the matcher returns true then it satisfies the special character requirement
      * the dupSet is mapped to the passwordList earlier in the intialization of the two because of the nature of sets not allowing duplicates by default
      * if the dupSet size is the same as the password list & the password matches the special character regex
      * then no duplicates are detected and the current iteration can be added to the password list
