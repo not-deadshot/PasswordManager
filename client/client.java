@@ -49,16 +49,16 @@ public class client {
 
     private void updatePassword(int selected){
         /* User inputs value to change in the list ** REMEMBER USER IS NOT ACCOUNTING FOR ZERO INDEXING SO DO SELECTED - 1 FOR CORRECT INDEX** */
-        ArrayList<String> passwordList = new ArrayList<>(Arrays.asList("Password_!", "Daking17_!", "Salat123_!"));
         Scanner input = new Scanner(System.in);
         if (selected <= 0 || selected > passwordList.size()){
             System.out.println("Error: Input given either too small or big for list, please try again with a appicable selection. \n");
         } else {
-            System.out.println("You've selected password #" + selected);
+            System.out.println("\nYou've selected password #" + selected);
             System.out.println("What would you like to change it to?\n");
             String trigger = input.nextLine();
             passwordList.set(selected-1, trigger);
-            System.out.println("Update Successful");
+            System.out.println("\nUpdate Successful");
+            input.close();
         }
     }
 
@@ -82,7 +82,7 @@ public class client {
         dummyList.add(input);
         if (matcher.matches() && dupSET.size() == dummyList.size()){
             passwordList.add(input);
-            System.out.println("Validated!\n");
+            System.out.println("\nValidated!\n");
         } else  if (!matcher.matches()){
             System.out.println("Error: Non-Special Character\n");
             //System.out.print("Does it contain a special character: " + matcher.matches() + "\n");
@@ -95,6 +95,33 @@ public class client {
             System.out.println("dummyList Content: " + dummyList);
             */
         }
+    }
+
+    /*
+     * Delete operation that takes one parameter being the entry in the list you'd like to delete. If the selected value is outside the scope of the list
+     * we return an error, otherwise we delete the password list using .remove() and if there is an exception we use try-catch to get it and return the message back
+     * to the user.
+     */
+    private void deletePassword(int selected){
+        if (selected <= 0 || selected > passwordList.size()){
+            System.out.println("Error: Input given either too small or big for list, please try again with a appicable selection. \n");
+        } else {
+            System.out.println("\nYou've selected password #" + selected + ".");
+            System.out.println("Deleting....\n");
+            try {
+                passwordList.remove(selected-1);
+                System.out.println("Deleting Successful!");
+            } catch(Exception e) {
+                System.out.println(e.getMessage());
+            }        
+        }
+    }
+
+    /*
+     * Simply Read operation. Just output the password list
+     */
+    private void showPasswordList(){
+        System.out.println("PasswordList: " + passwordList);
     }
 
     /*
@@ -168,7 +195,28 @@ public class client {
 
     public static void main(String[] args) {
         client myClient = new client();
-        myClient.run();
+
+        // Create
+        myClient.createPassword("Dakinng17_!");
+        myClient.createPassword("EasyPeasyLemon123_!");
+        myClient.createPassword("sALAT1236547_!");
+        myClient.createPassword("ln193col41_!!!");
+        myClient.createPassword("leftrightuzi!!");
+
+        // Update
+        myClient.updatePassword(2);
+        myClient.updatePassword(5);
+
+        // Delete
+        myClient.deletePassword(4);
+        myClient.deletePassword(1);
+
+        // Read (Show)
+        myClient.showPasswordList();
+
+
+
+
 
 
         
