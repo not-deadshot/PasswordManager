@@ -3,6 +3,8 @@
  * Needed Libraries and imports 
  */
 import java.util.ArrayList;
+import static java.util.Arrays.asList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
@@ -29,7 +31,7 @@ public class client {
 
     /* List of passwords for duplication and storage */
     private ArrayList<String> passwordList = new ArrayList<String>();
-    private Set<String> dupSET = new HashSet<String>(passwordList);
+    private Set<String> dupSET = new HashSet<String>();
     private ArrayList<String> dummyList = new ArrayList<String>();
 
 
@@ -46,11 +48,17 @@ public class client {
     }
 
     private void updatePassword(int selected){
-        /* User inputs value to change in the list ** REMEMBER USER IS NOT ACCOUNTING FOR ZERO INDEXING ** */
+        /* User inputs value to change in the list ** REMEMBER USER IS NOT ACCOUNTING FOR ZERO INDEXING SO DO SELECTED - 1 FOR CORRECT INDEX** */
+        ArrayList<String> passwordList = new ArrayList<>(Arrays.asList("Password_!", "Daking17_!", "Salat123_!"));
+        Scanner input = new Scanner(System.in);
         if (selected <= 0 || selected > passwordList.size()){
-            System.out.println("Error: Input given either too small or big for list, please try again with a appicable selection.");
+            System.out.println("Error: Input given either too small or big for list, please try again with a appicable selection. \n");
         } else {
-            System.out.println("Good");
+            System.out.println("You've selected password #" + selected);
+            System.out.println("What would you like to change it to?\n");
+            String trigger = input.nextLine();
+            passwordList.set(selected-1, trigger);
+            System.out.println("Update Successful");
         }
     }
 
@@ -101,16 +109,30 @@ public class client {
     private void run(){
         boolean run = true;
         Scanner input = new Scanner(System.in);
+        System.out.println("Welcome to the Password Manager!\n");
         while (run){
-            System.out.print("Enter The Password: ");
-            String line = input.nextLine();
-            if ("exit".equalsIgnoreCase(line)) {
+            System.out.println("Create = Create Password" +  "\n" +  "Show = PasswordList" + "\n" + "Update = Update Password" + "\n" + "Exit = Exit Program \n");
+            System.out.println("What would we like to do?:");
+            String trigger = input.nextLine();
+            System.out.println();
+            if ("exit".equalsIgnoreCase(trigger)) {
                 break;
+            } else if ("update".equalsIgnoreCase(trigger)){
+                System.out.println("Which password would you like to update?: ");
+                int line2 = input.nextInt();
+                input.nextLine();
+                updatePassword(line2);
+            } else if ("create".equalsIgnoreCase(trigger)){
+                System.out.println("Enter the password you'd like to add: (No Repeated Passwords)");
+                String createPassword = input.nextLine();
+                createPassword(createPassword);
+            } else if ("show".equalsIgnoreCase(trigger)){
+                System.out.println("Your Password List: " + passwordList + "\n");
+            } else {
+                System.out.println("Sorry, please enter a correct command or exit the program");
             }
-            createPassword(line);
         }
         input.close();
-        System.out.print("Your Password List: " + passwordList + "\n");
         System.out.println("Goodbye!");
     }
 
@@ -147,6 +169,7 @@ public class client {
     public static void main(String[] args) {
         client myClient = new client();
         myClient.run();
+
 
         
     }
